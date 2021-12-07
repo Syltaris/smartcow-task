@@ -47,44 +47,58 @@ const Images = () => {
           {/* Image Viewer */}
           <div class="flex flex-col">
             {selectedImage && (
-              <div>
-                {annotateMode ? (
-                  <ImageAnnotator image={selectedImage} />
-                ) : (
-                  <ImageViewer image={selectedImage} />
+              <>
+                <div>
+                  {annotateMode ? (
+                    <ImageAnnotator image={selectedImage} />
+                  ) : (
+                    <ImageViewer image={selectedImage} />
+                  )}
+                </div>
+                <button
+                  type="button"
+                  class="py-2 px-4 m-2 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+                  onClick={() => {
+                    setAnnotateMode(!annotateMode);
+                  }}
+                >
+                  {annotateMode ? "Done" : "Annotate"}
+                </button>
+                <Link
+                  class="py-2 px-4 m-2 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+                  to={`/projects/${selectedImage.projectId}`}
+                >
+                  <span class="mx-4 text-lg font-normal">Go to Project</span>
+                  <span class="flex-grow text-right"></span>
+                </Link>
+                {!annotateMode && (
+                  <CsvDownloader
+                    class="py-2 px-4 m-2 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+                    filename={`${selectedImage.name}.annotations`}
+                    extension=".csv"
+                    seperator=","
+                    columns={[
+                      "name",
+                      "startX",
+                      "startY",
+                      "endX",
+                      "endY",
+                      "label",
+                    ]}
+                    datas={selectedImage.annotations.map((annotation) => {
+                      return {
+                        name: selectedImage.name,
+                        startX: annotation.startX,
+                        startY: annotation.startY,
+                        endX: annotation.endX,
+                        endY: annotation.endY,
+                        label: annotation.type,
+                      };
+                    })}
+                    text="Download CSV"
+                  />
                 )}
-              </div>
-            )}
-            {selectedImage && (
-              <button
-                type="button"
-                class="py-2 px-4 m-2 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
-                onClick={() => {
-                  setAnnotateMode(!annotateMode);
-                }}
-              >
-                {annotateMode ? "Done" : "Annotate"}
-              </button>
-            )}
-            {selectedImage && !annotateMode && (
-              <CsvDownloader
-                class="py-2 px-4 m-2 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
-                filename={`${selectedImage.name}.annotations`}
-                extension=".csv"
-                seperator=","
-                columns={["name", "startX", "startY", "endX", "endY", "label"]}
-                datas={selectedImage.annotations.map((annotation) => {
-                  return {
-                    name: selectedImage.name,
-                    startX: annotation.startX,
-                    startY: annotation.startY,
-                    endX: annotation.endX,
-                    endY: annotation.endY,
-                    label: annotation.type,
-                  };
-                })}
-                text="Download CSV"
-              />
+              </>
             )}
           </div>
         </div>

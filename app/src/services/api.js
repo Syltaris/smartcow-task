@@ -27,6 +27,7 @@ const addImageToProject = async (projectId, image) => {
   const [width, height] = await getImageDimensions(image);
   project.images.push({
     id: project.images.length + 1,
+    projectId: projectId,
     name: image.name,
     url: window.URL.createObjectURL(image),
     width,

@@ -30,6 +30,10 @@ Annotation
 
 # Frontend
 
+## How to Start
+
+Navigate to `/app` folder, do a `yarn` install, and then `yarn start` to spin up the frontend.
+
 ## User Flows
 
 1. User can create 'Project'

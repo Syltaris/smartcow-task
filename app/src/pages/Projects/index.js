@@ -5,6 +5,7 @@ import {
   createProject,
   addImageToProject,
 } from "../../services/api";
+import CsvDownloader from "react-csv-downloader";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
@@ -56,39 +57,70 @@ const Projects = () => {
           </div>
           {/* Project Details */}
           {selectedProject && (
-            <div>
-              <label
-                class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300"
-                for="user_avatar"
-              >
-                Upload images
-              </label>
-              <input
-                class="block w-full cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 dark:text-gray-400 focus:outline-none focus:border-transparent text-sm rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                aria-describedby="user_avatar_help"
-                id="user_avatar"
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={(e) => {
-                  e.preventDefault();
-                  if (e.target.files) {
-                    setImageFiles(e.target.files);
-                  }
-                }}
-              />
-              <button
-                type="button"
-                class="py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
-                onClick={async () => {
-                  for (const file of imageFiles) {
-                    await addImageToProject(selectedProject.id, file);
-                  }
-                  await fetchProjects();
-                }}
-              >
-                Confirm and Add
-              </button>
+            <div class="flex flex-row">
+              <div class="flex-col">
+                <label
+                  class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300"
+                  for="user_avatar"
+                >
+                  Upload images
+                </label>
+                <input
+                  class="block w-full cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 dark:text-gray-400 focus:outline-none focus:border-transparent text-sm rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                  aria-describedby="user_avatar_help"
+                  id="user_avatar"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={(e) => {
+                    e.preventDefault();
+                    if (e.target.files) {
+                      setImageFiles(e.target.files);
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  class="py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+                  onClick={async () => {
+                    for (const file of imageFiles) {
+                      await addImageToProject(selectedProject.id, file);
+                    }
+                    await fetchProjects();
+                  }}
+                >
+                  Confirm and Add
+                </button>
+                <div>
+                  <CsvDownloader
+                    class="py-2 px-4 m-2 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+                    filename={`${selectedProject.name}-${selectedProject.id}`}
+                    extension=".csv"
+                    seperator=","
+                    columns={[
+                      "name",
+                      "startX",
+                      "startY",
+                      "endX",
+                      "endY",
+                      "label",
+                    ]}
+                    datas={selectedProject.images.flatMap((image) =>
+                      image.annotations.map((annotation) => {
+                        return {
+                          name: image.name,
+                          startX: annotation.startX,
+                          startY: annotation.startY,
+                          endX: annotation.endX,
+                          endY: annotation.endY,
+                          label: annotation.type,
+                        };
+                      })
+                    )}
+                    text="Download CSV"
+                  />
+                </div>
+              </div>
               <div class="grid grid-cols-3 gap-2">
                 {selectedProject.images?.map((image) => {
                   return (
