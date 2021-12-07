@@ -91,14 +91,6 @@ const ImageAnnotator = ({ image }) => {
               e.clientX - startCoord.x - rect.left + "px";
             currentBox.style.height =
               e.clientY - startCoord.y - rect.top + "px";
-            console.log(
-              currentBox.style.width,
-              currentBox.style.height,
-              e.clientX,
-              e.clientY,
-              rect.left,
-              rect.top
-            );
           }
         }}
         onMouseUp={(e) => {

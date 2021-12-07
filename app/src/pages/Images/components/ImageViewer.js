@@ -1,5 +1,5 @@
 const ImageViewer = ({ image }) => (
-  <>
+  <div id="image-container">
     <img
       class="rounded-t-lg min-h-450 select-none"
       draggable="false"
@@ -9,25 +9,26 @@ const ImageViewer = ({ image }) => (
     {
       // draw exsisting annotations
       image.annotations?.map((annotation, id) => {
-        console.log(annotation, "annotation");
+        const container = document.getElementById("image-container");
+        const rect = container?.getBoundingClientRect();
+        const style = {
+          position: "absolute",
+          left: (rect?.left || 0) + annotation.startX + "px",
+          top: annotation.startY + "px", // (rect?.top || 0) + // not sure why this is too much?
+          width: annotation.endX - annotation.startX,
+          height: annotation.endY - annotation.startY,
+          border: "2px solid red",
+          overflow: "visible",
+        };
+        console.log(rect, style);
         return (
-          <div
-            key={id}
-            style={{
-              position: "absolute",
-              left: annotation.startX + "px",
-              top: annotation.startY + "px",
-              width: annotation.endX - annotation.startX + "px",
-              height: annotation.endY - annotation.startY + "px",
-              border: "2px solid red",
-            }}
-          >
-            {annotation.type}
+          <div key={id} style={style}>
+            <span>{annotation.type}</span>
           </div>
         );
       })
     }
-  </>
+  </div>
 );
 
 export default ImageViewer;
