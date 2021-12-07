@@ -19,4 +19,5 @@ class Image(models.Model):
 
 
 class Project(models.Model):
+    name = models.CharField(max_length=100, null=True)
     images = models.ManyToManyField(Image)

@@ -10,18 +10,10 @@ const getProjects = async () => {
   return resp.data;
 };
 
-const createProject = async () => {
+const createProject = async (project) => {
   // replace with api call
-  const pk = projects.length + 1;
-  const project = {
-    id: pk,
-    name: "New Project",
-    images: [],
-  };
-  projects.push(project);
-
-  // should return with data object
-  return project;
+  const resp = await axios.post(`${BASE_URL}/projects/`, project);
+  return resp.data;
 };
 
 const addImageToProject = async (projectId, image) => {
