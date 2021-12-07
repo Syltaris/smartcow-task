@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getImages } from "../../services/api";
+import ImageAnnotator from "./components/ImageAnnotator";
+
+import ImageViewer from "./components/ImageViewer";
 
 const Images = () => {
   const [images, setImages] = useState([]);
+  const [annotateMode, setAnnotateMode] = useState(false);
 
   async function fetchImages() {
     const response = await getImages();
@@ -38,17 +42,28 @@ const Images = () => {
               ))}
             </nav>
           </div>
+
           {/* Image Viewer */}
-          {selectedImage && (
-            <div>
-              <img
-                class="rounded-t-lg min-h-450 select-none"
-                draggable="false"
-                src={selectedImage.url}
-                alt={selectedImage.name}
-              />
-            </div>
-          )}
+          <div class="flex flex-col">
+            {selectedImage && (
+              <div>
+                {annotateMode ? (
+                  <ImageAnnotator image={selectedImage} />
+                ) : (
+                  <ImageViewer image={selectedImage} />
+                )}
+              </div>
+            )}
+            <button
+              type="button"
+              class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+              onClick={() => {
+                setAnnotateMode(!annotateMode);
+              }}
+            >
+              {annotateMode ? "Done" : "Annotate"}
+            </button>
+          </div>
         </div>
       </div>
     </>
