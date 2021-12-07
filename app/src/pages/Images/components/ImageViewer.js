@@ -10,7 +10,10 @@ const ImageViewer = ({ image }) => (
       // draw exsisting annotations
       image.annotations?.map((annotation, id) => {
         const container = document.getElementById("image-container");
-        const rect = container?.getBoundingClientRect();
+        const rect = container?.getBoundingClientRect() ?? {
+          left: 288,
+        }; // temp workaround to weird bug
+        console.log(rect);
         const style = {
           position: "absolute",
           left: (rect?.left || 0) + annotation.startX + "px",
