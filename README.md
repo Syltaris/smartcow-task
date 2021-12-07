@@ -1,5 +1,9 @@
 # Server
 
+## How to Start
+
+Navigate to `/server` folder, do a `docker-compose up` install, and the backend is hosted and ready.
+
 ## Endpoints
 
 | endpoint    | method | details                                  |
