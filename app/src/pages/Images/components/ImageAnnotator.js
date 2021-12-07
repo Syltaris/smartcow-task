@@ -1,16 +1,20 @@
 import { useState } from "react";
 import ImageViewer from "./ImageViewer";
+import { addAnnotationToImage } from "../../../services/api";
+
+const options = ["Car", "Bus", "Auto-rickshaw", "Bike"];
 
 const SelectInput = (props) => {
   return (
     <select
       class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      defaultValue={options[0]}
       {...props}
     >
-      <option>Car</option>
-      <option>Bus</option>
-      <option>Auto-rickshaw</option>
-      <option>Bike</option>
+      {" "}
+      {options.map((option) => (
+        <option key={option}>{option}</option>
+      ))}
     </select>
   );
 };
@@ -23,6 +27,18 @@ const ImageAnnotator = ({ image }) => {
 
   const [isDrawing, setIsDrawing] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
+
+  const [selectedOption, setSelectedOption] = useState(options[0]);
+
+  const onCloseInput = () => {
+    // clean up boxes
+    setShowOptions(false);
+    const canvas = document.getElementById("canvas");
+    canvas.removeChild(currentBox);
+    setCurrentBox(null);
+    setSelectedOption(options[0]);
+  };
+
   return (
     <div>
       <div
@@ -88,6 +104,27 @@ const ImageAnnotator = ({ image }) => {
           setShowOptions(true);
         }}
       >
+        {
+          // draw exsisting annotations
+          image.annotations?.map((annotation, id) => {
+            console.log(annotation);
+            return (
+              <div
+                key={id}
+                style={{
+                  position: "absolute",
+                  left: annotation.startX + "px",
+                  top: annotation.startY + "px",
+                  width: annotation.endX - annotation.startX + "px",
+                  height: annotation.endY - annotation.startY + "px",
+                  border: "2px solid red",
+                }}
+              >
+                {annotation.type}
+              </div>
+            );
+          })
+        }
         {showOptions && (
           <div
             id="annotations"
@@ -105,18 +142,24 @@ const ImageAnnotator = ({ image }) => {
               zIndex: 4,
             }}
           >
-            <SelectInput style={{ marginRight: 15 }} />
+            <SelectInput
+              style={{ marginRight: 15 }}
+              onChange={(e) => {
+                setSelectedOption(e.target.value.toString());
+              }}
+            />
             <button
               type="button"
               class="text-white bg-green-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-3 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              onClick={() => {
-                // add annotation to image
-                // clean up boxes
-                // refactor this into shared cleanup
-                setShowOptions(false);
-                const canvas = document.getElementById("canvas");
-                canvas.removeChild(currentBox);
-                setCurrentBox(null);
+              onClick={async () => {
+                await addAnnotationToImage(image.id, {
+                  type: selectedOption?.toLowerCase(),
+                  startX: startCoord.x,
+                  startY: startCoord.y,
+                  endX: endCoord.x,
+                  endY: endCoord.y,
+                });
+                onCloseInput();
               }}
             >
               <svg
@@ -138,11 +181,7 @@ const ImageAnnotator = ({ image }) => {
               type="button"
               class="text-white bg-red-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-3 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               onClick={() => {
-                // refactor this into shared cleanup
-                setShowOptions(false);
-                const canvas = document.getElementById("canvas");
-                canvas.removeChild(currentBox);
-                setCurrentBox(null);
+                onCloseInput();
               }}
             >
               <svg

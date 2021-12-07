@@ -40,6 +40,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Projects />} />
         <Route path="/projects/:id" element={<Projects />} />
+        <Route path="/images" element={<Images />} />
         <Route path="/images/:id" element={<Images />} />
       </Routes>
     </div>

@@ -31,6 +31,7 @@ const addImageToProject = async (projectId, image) => {
     url: window.URL.createObjectURL(image),
     width,
     height,
+    annotations: [],
   });
 
   // should return with data object
@@ -48,4 +49,18 @@ const getImages = async (projectId) => {
   return projects.flatMap((p) => p.images);
 };
 
-export { getProjects, createProject, addImageToProject, getImage, getImages };
+const addAnnotationToImage = async (imageId, annotation) => {
+  // replace with api call
+  const allImages = projects.flatMap((p) => p.images);
+  const image = allImages.find((image) => image.id === imageId);
+  image.annotations.push(annotation);
+};
+
+export {
+  getProjects,
+  createProject,
+  addImageToProject,
+  getImage,
+  getImages,
+  addAnnotationToImage,
+};

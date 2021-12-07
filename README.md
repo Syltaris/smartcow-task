@@ -23,7 +23,10 @@ Image
 Annotation
 
 - type
-- coordinates: [xy, xy, xy, xy]
+- startX
+- startY
+- endX
+- endY
 
 # Frontend
 
