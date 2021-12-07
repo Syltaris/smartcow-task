@@ -1,9 +1,13 @@
 import { getImageDimensions } from "../utils/image";
+import axios from "axios";
+
 const projects = [];
+const BASE_URL = process.env.REACT_APP_API_URL;
 
 const getProjects = async () => {
   // should return projects belonging to user: after auth'ed
-  return [...projects]; // trick to rerender
+  const resp = await axios.get(`${BASE_URL}/projects/`);
+  return resp.data;
 };
 
 const createProject = async () => {
