@@ -19,4 +19,18 @@ const createProject = async () => {
   return project;
 };
 
-export { getProjects, createProject };
+const addImageToProject = async (projectId, image) => {
+  // replace with api call
+  const project = projects.find((p) => p.id === projectId);
+
+  project.images.push({
+    id: project.images.length + 1,
+    name: image.name,
+    url: window.URL.createObjectURL(image),
+  });
+
+  // should return with data object
+  return project;
+};
+
+export { getProjects, createProject, addImageToProject };

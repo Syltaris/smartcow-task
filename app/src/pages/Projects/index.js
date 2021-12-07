@@ -1,9 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getProjects, createProject } from "../../services/api";
+import {
+  getProjects,
+  createProject,
+  addImageToProject,
+} from "../../services/api";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
+  const [imageFiles, setImageFiles] = useState([]);
 
   async function fetchProjects() {
     const response = await getProjects();
@@ -21,6 +26,7 @@ const Projects = () => {
     <>
       <div class="relative bg-white dark:bg-gray-800">
         <div class="flex flex-col sm:flex-row ">
+          {/* Sidebar */}
           <div class="w-72 h-screen">
             <nav class="mt-10 px-6 ">
               <h1 class="py-4 ml-3 text-xl">Projects</h1>
@@ -37,6 +43,7 @@ const Projects = () => {
               </button>
               {projects.map((project) => (
                 <Link
+                  key={project.id}
                   class="hover:text-gray-800 hover:bg-gray-100 flex items-center p-2 my-6 transition-colors dark:hover:text-white dark:hover:bg-gray-600 duration-200  text-gray-600 dark:text-gray-400 rounded-lg "
                   href="#"
                   to={`/projects/${project.id}`}
@@ -47,9 +54,61 @@ const Projects = () => {
               ))}
             </nav>
           </div>
+          {/* Project Details */}
           {selectedProject && (
             <div>
-              {selectedProject.name} +{selectedProject.id}
+              <label
+                class="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300"
+                for="user_avatar"
+              >
+                Upload images
+              </label>
+              <input
+                class="block w-full cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 dark:text-gray-400 focus:outline-none focus:border-transparent text-sm rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                aria-describedby="user_avatar_help"
+                id="user_avatar"
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={(e) => {
+                  e.preventDefault();
+                  if (e.target.files) {
+                    setImageFiles(e.target.files);
+                  }
+                }}
+              />
+              <button
+                type="button"
+                class="py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+                onClick={async () => {
+                  for (const file of imageFiles) {
+                    await addImageToProject(selectedProject.id, file);
+                  }
+                  await fetchProjects();
+                }}
+              >
+                Confirm and Add
+              </button>
+              <div class="grid grid-cols-3 gap-2">
+                {selectedProject.images?.map((image) => {
+                  return (
+                    <div class="bg-white shadow-md border border-gray-200 rounded-lg max-w-sm dark:bg-gray-800 dark:border-gray-700">
+                      <Link to={`/images/${image.id}`}>
+                        <img
+                          class="rounded-t-lg min-h-450"
+                          src={image.url}
+                          alt={image.name}
+                        />
+                        <div class="p-5">
+                          <h5 class="text-gray-900 font-bold text-2xl tracking-tight mb-2 dark:text-white">
+                            {image.name}
+                          </h5>
+                        </div>
+                      </Link>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
