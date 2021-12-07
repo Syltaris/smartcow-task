@@ -131,7 +131,7 @@ const Projects = () => {
                       <Link to={`/images/${image.id}`}>
                         <img
                           class="rounded-t-lg min-h-450"
-                          src={image.url}
+                          src={process.env.REACT_APP_API_URL + image.url}
                           alt={image.name}
                         />
                         <div class="p-5">

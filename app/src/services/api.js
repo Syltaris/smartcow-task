@@ -4,6 +4,11 @@ import axios from "axios";
 const projects = [];
 const BASE_URL = process.env.REACT_APP_API_URL;
 
+const getProject = async (projectId) => {
+  const resp = await axios.get(`${BASE_URL}/projects/${projectId}/`);
+  return resp.data;
+};
+
 const getProjects = async () => {
   // should return projects belonging to user: after auth'ed
   const resp = await axios.get(`${BASE_URL}/projects/`);
@@ -19,17 +24,29 @@ const createProject = async (project) => {
 const addImageToProject = async (projectId, image) => {
   // replace with api call
   const project = projects.find((p) => p.id === projectId);
-
   const [width, height] = await getImageDimensions(image);
-  project.images.push({
-    id: project.images.length + 1,
-    projectId: projectId,
-    name: image.name,
-    url: window.URL.createObjectURL(image),
-    width,
-    height,
-    annotations: [],
+  //   project.images.push({
+  //     id: project.images.length + 1,
+  //     projectId: projectId,
+  //     name: image.name,
+  //     url: window.URL.createObjectURL(image),
+  //     width,
+  //     height,
+  //     annotations: [],
+  //   });
+  console.log(image);
+  const formData = new FormData();
+  formData.append("image", image);
+  formData.append("project_id", projectId);
+
+  const resp = await axios.post(`${BASE_URL}/images/`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
+  console.log(resp, image);
+
+  return await getProject(projectId);
 
   // should return with data object
   return project;
