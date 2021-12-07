@@ -33,4 +33,15 @@ const addImageToProject = async (projectId, image) => {
   return project;
 };
 
-export { getProjects, createProject, addImageToProject };
+const getImage = async (imageId) => {
+  // replace with api call
+  const allImages = projects.flatMap((p) => p.images);
+  return allImages.find((image) => image.id === imageId);
+};
+
+const getImages = async (projectId) => {
+  // replace with api call
+  return projects.flatMap((p) => p.images);
+};
+
+export { getProjects, createProject, addImageToProject, getImage, getImages };

@@ -2,6 +2,7 @@ import "./App.css";
 import { Routes, Route, Link } from "react-router-dom";
 
 import Projects from "./pages/Projects";
+import Images from "./pages/Images";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Projects />} />
         <Route path="/projects/:id" element={<Projects />} />
+        <Route path="/images/:id" element={<Images />} />
       </Routes>
     </div>
   );
