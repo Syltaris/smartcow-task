@@ -41,15 +41,15 @@ const ImageAnnotator = ({ image }) => {
 
   return (
     <div>
+      {/* seperate canvas, to avoid mouse over bounding rect issues onMouseDown */}
       <div
         id="canvas"
-        draggable="false"
         style={{
           width: image.width,
           height: image.height,
-          border: "5px solid cyan",
+          border: "2px solid purple",
           position: "absolute",
-          zIndex: 1,
+          zIndex: 2,
         }}
       />
       <div
@@ -58,7 +58,7 @@ const ImageAnnotator = ({ image }) => {
           height: image.height,
           border: "2px solid purple",
           position: "absolute",
-          zIndex: 2,
+          zIndex: 3,
         }}
         draggable="false"
         onMouseDown={(e) => {
@@ -76,6 +76,7 @@ const ImageAnnotator = ({ image }) => {
             box.style.top = startCoord.y + "px";
             box.style.position = "absolute";
             box.style.border = "2px solid red";
+            box.style.zIndex = "4";
 
             const canvas = document.getElementById("canvas");
             canvas.appendChild(box);
@@ -90,41 +91,31 @@ const ImageAnnotator = ({ image }) => {
               e.clientX - startCoord.x - rect.left + "px";
             currentBox.style.height =
               e.clientY - startCoord.y - rect.top + "px";
+            console.log(
+              currentBox.style.width,
+              currentBox.style.height,
+              e.clientX,
+              e.clientY,
+              rect.left,
+              rect.top
+            );
           }
         }}
         onMouseUp={(e) => {
-          setIsDrawing(false);
-          var rect = e.target.getBoundingClientRect();
-          const endCoord = {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top,
-          };
-          setEndCoord(endCoord);
+          if (!showOptions) {
+            setIsDrawing(false);
+            var rect = e.target.getBoundingClientRect();
+            const endCoord = {
+              x: e.clientX - rect.left,
+              y: e.clientY - rect.top,
+            };
+            console.log(endCoord, "eeen");
 
-          setShowOptions(true);
+            setShowOptions(true);
+            setEndCoord(endCoord);
+          }
         }}
       >
-        {
-          // draw exsisting annotations
-          image.annotations?.map((annotation, id) => {
-            console.log(annotation);
-            return (
-              <div
-                key={id}
-                style={{
-                  position: "absolute",
-                  left: annotation.startX + "px",
-                  top: annotation.startY + "px",
-                  width: annotation.endX - annotation.startX + "px",
-                  height: annotation.endY - annotation.startY + "px",
-                  border: "2px solid red",
-                }}
-              >
-                {annotation.type}
-              </div>
-            );
-          })
-        }
         {showOptions && (
           <div
             id="annotations"
@@ -152,6 +143,7 @@ const ImageAnnotator = ({ image }) => {
               type="button"
               class="text-white bg-green-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-3 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               onClick={async () => {
+                console.log("adding", startCoord, endCoord);
                 await addAnnotationToImage(image.id, {
                   type: selectedOption?.toLowerCase(),
                   startX: startCoord.x,
