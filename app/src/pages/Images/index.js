@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import CsvDownloader from "react-csv-downloader";
 import { Link, useParams } from "react-router-dom";
 import { getImages } from "../../services/api";
 import ImageAnnotator from "./components/ImageAnnotator";
@@ -57,13 +58,33 @@ const Images = () => {
             {selectedImage && (
               <button
                 type="button"
-                class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+                class="py-2 px-4 m-2 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
                 onClick={() => {
                   setAnnotateMode(!annotateMode);
                 }}
               >
                 {annotateMode ? "Done" : "Annotate"}
               </button>
+            )}
+            {selectedImage && !annotateMode && (
+              <CsvDownloader
+                class="py-2 px-4 m-2 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+                filename={`${selectedImage.name}.annotations`}
+                extension=".csv"
+                seperator=","
+                columns={["name", "startX", "startY", "endX", "endY", "label"]}
+                datas={selectedImage.annotations.map((annotation) => {
+                  return {
+                    name: selectedImage.name,
+                    startX: annotation.startX,
+                    startY: annotation.startY,
+                    endX: annotation.endX,
+                    endY: annotation.endY,
+                    label: annotation.type,
+                  };
+                })}
+                text="Download CSV"
+              />
             )}
           </div>
         </div>

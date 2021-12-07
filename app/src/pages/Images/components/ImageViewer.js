@@ -20,7 +20,6 @@ const ImageViewer = ({ image }) => (
           border: "2px solid red",
           overflow: "visible",
         };
-        console.log(rect, style);
         return (
           <div key={id} style={style}>
             <span>{annotation.type}</span>
