@@ -19,7 +19,7 @@ const SelectInput = (props) => {
   );
 };
 
-const ImageAnnotator = ({ image }) => {
+const ImageAnnotator = ({ image, onAnnotationAdded }) => {
   const [startCoord, setStartCoord] = useState({ x: 0, y: 0 });
   const [endCoord, setEndCoord] = useState({ x: 0, y: 0 });
 
@@ -101,7 +101,6 @@ const ImageAnnotator = ({ image }) => {
               x: e.clientX - rect.left,
               y: e.clientY - rect.top,
             };
-            console.log(endCoord, "eeen");
 
             setShowOptions(true);
             setEndCoord(endCoord);
@@ -143,6 +142,7 @@ const ImageAnnotator = ({ image }) => {
                   endX: endCoord.x,
                   endY: endCoord.y,
                 });
+                await onAnnotationAdded();
                 onCloseInput();
               }}
             >

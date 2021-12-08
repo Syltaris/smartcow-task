@@ -50,7 +50,10 @@ const Images = () => {
               <>
                 <div>
                   {annotateMode ? (
-                    <ImageAnnotator image={selectedImage} />
+                    <ImageAnnotator
+                      image={selectedImage}
+                      onAnnotationAdded={() => fetchImages()}
+                    />
                   ) : (
                     <ImageViewer image={selectedImage} />
                   )}

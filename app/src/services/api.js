@@ -50,9 +50,10 @@ const getImages = async (projectId) => {
 
 const addAnnotationToImage = async (imageId, annotation) => {
   // replace with api call
-  const allImages = projects.flatMap((p) => p.images);
-  const image = allImages.find((image) => image.id === imageId);
-  image.annotations.push(annotation);
+  const payload = Object.assign({}, annotation);
+  payload["image"] = imageId;
+  const resp = await axios.post(`${BASE_URL}/annotations/`, payload);
+  return resp.data;
 };
 
 export {

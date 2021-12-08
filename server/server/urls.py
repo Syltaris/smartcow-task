@@ -21,12 +21,14 @@ from django.conf import settings
 
 from rest_framework import routers
 
-from annotations.views import ProjectViewSet, ImageViewSet
+from annotations.views import ProjectViewSet, ImageViewSet, AnnotationViewSet
 
 
 router = routers.SimpleRouter()
 router.register(r"projects", ProjectViewSet)
 router.register(r"images", ImageViewSet)
+router.register(r"annotations", AnnotationViewSet)
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),

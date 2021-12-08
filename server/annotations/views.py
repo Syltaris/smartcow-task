@@ -16,16 +16,17 @@ from annotations.models import Annotation, Project, Image
 class AnnotationSerializer(ModelSerializer):
     class Meta:
         model = Annotation
+        fields = "__all__"
 
 
 class ImageSerializer(Serializer):
     id = IntegerField()
     project_id = PrimaryKeyRelatedField(queryset=Project.objects.all())
-    annotations = PrimaryKeyRelatedField(queryset=Annotation.objects.all(), many=True)
     url = SerializerMethodField()
     name = CharField()
     width = IntegerField()
     height = IntegerField()
+    annotations = AnnotationSerializer(many=True, read_only=True)
 
     class Meta:
         model = Image
@@ -44,13 +45,11 @@ class ProjectSerializer(ModelSerializer):
         fields = ("id", "name", "images")
 
 
-# Create your views here.
 class ProjectViewSet(ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
 
-# Create your views here.
 class ImageViewSet(ModelViewSet):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
@@ -65,3 +64,8 @@ class ImageViewSet(ModelViewSet):
             height=request.data.get("height"),
         )
         return Response(self.serializer_class(image).data)
+
+
+class AnnotationViewSet(ModelViewSet):
+    queryset = Annotation.objects.all()
+    serializer_class = AnnotationSerializer
