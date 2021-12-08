@@ -11,12 +11,20 @@ class Annotation(models.Model):
     startY = models.IntegerField()
     endX = models.IntegerField()
     endY = models.IntegerField()
+    image = models.ForeignKey(
+        "Image", related_name="annotations", on_delete=models.CASCADE, null=True
+    )
 
 
 class Image(models.Model):
-    file = models.ImageField(upload_to="images")
-    annotations = models.ManyToManyField(Annotation)
+    file = models.ImageField(upload_to="images")  # url is from file.url
+    project = models.ForeignKey(
+        "Project", related_name="images", on_delete=models.CASCADE, null=True
+    )
+    name = models.CharField(max_length=100)
+    width = models.IntegerField()
+    height = models.IntegerField()
 
 
 class Project(models.Model):
-    images = models.ManyToManyField(Image)
+    name = models.CharField(max_length=100, null=True)

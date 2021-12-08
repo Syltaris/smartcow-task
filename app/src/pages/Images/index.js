@@ -50,7 +50,10 @@ const Images = () => {
               <>
                 <div>
                   {annotateMode ? (
-                    <ImageAnnotator image={selectedImage} />
+                    <ImageAnnotator
+                      image={selectedImage}
+                      onAnnotationAdded={() => fetchImages()}
+                    />
                   ) : (
                     <ImageViewer image={selectedImage} />
                   )}
@@ -66,7 +69,7 @@ const Images = () => {
                 </button>
                 <Link
                   class="py-2 px-4 m-2 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
-                  to={`/projects/${selectedImage.projectId}`}
+                  to={`/projects/${selectedImage.project_id}`}
                 >
                   <span class="mx-4 text-lg font-normal">Go to Project</span>
                   <span class="flex-grow text-right"></span>

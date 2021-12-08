@@ -35,9 +35,12 @@ const Projects = () => {
               <button
                 type="button"
                 class="py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
-                onClick={() => {
-                  createProject();
-                  fetchProjects();
+                onClick={async () => {
+                  await createProject({
+                    name: "New Project",
+                    images: [],
+                  });
+                  await fetchProjects();
                 }}
               >
                 Create Project
@@ -128,7 +131,7 @@ const Projects = () => {
                       <Link to={`/images/${image.id}`}>
                         <img
                           class="rounded-t-lg min-h-450"
-                          src={image.url}
+                          src={process.env.REACT_APP_API_URL + image.url}
                           alt={image.name}
                         />
                         <div class="p-5">
