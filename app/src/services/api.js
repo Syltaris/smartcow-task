@@ -1,7 +1,6 @@
 import { getImageDimensions } from "../utils/image";
 import axios from "axios";
 
-const projects = [];
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 const getProject = async (projectId) => {

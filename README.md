@@ -1,15 +1,24 @@
 # Server
 
+# Demo video link
+
+https://www.loom.com/share/cd07e6447bcc474a9257e1f0602bffa9
+
 ## How to Start
 
-Navigate to `/server` folder, do a `docker-compose up` install, and the backend is hosted and ready.
+Navigate to `/server` folder, do a `docker-compose up`, and the backend is hosted and ready.
 
 ## Endpoints
 
-| endpoint    | method | details                                  |
-| :---------- | :----- | :--------------------------------------- |
-| /project    | POST   | create new project with payload          |
-| /project/id | GET    | get project (which contains image links) |
+| endpoint     | method      | details                                  |
+| :----------- | :---------- | :--------------------------------------- |
+| /projects    | POST        | create new project with payload          |
+| /projects/id | GET         | get project (which contains image links) |
+| /projects    | GET         | get projects                             |
+| /images      | POST        | post new image (linked to project)       |
+| /images      | GET         | get images (which contains annotations)  |
+| /images/id   | GET         | get images (which contains annotations)  |
+| /post        | annotations | create annotation (linked to image)      |
 
 ## Models
 
