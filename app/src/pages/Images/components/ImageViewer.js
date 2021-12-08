@@ -3,7 +3,7 @@ const ImageViewer = ({ image }) => (
     <img
       class="rounded-t-lg min-h-450 select-none"
       draggable="false"
-      src={image.url}
+      src={process.env.REACT_APP_API_URL + image.url}
       alt={image.name}
     />
     {
@@ -13,7 +13,6 @@ const ImageViewer = ({ image }) => (
         const rect = container?.getBoundingClientRect() ?? {
           left: 288,
         }; // temp workaround to weird bug
-        console.log(rect);
         const style = {
           position: "absolute",
           left: (rect?.left || 0) + annotation.startX + "px",

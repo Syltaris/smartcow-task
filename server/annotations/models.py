@@ -17,10 +17,13 @@ class Annotation(models.Model):
 
 
 class Image(models.Model):
-    file = models.ImageField(upload_to="images")
+    file = models.ImageField(upload_to="images")  # url is from file.url
     project = models.ForeignKey(
         "Project", related_name="images", on_delete=models.CASCADE, null=True
     )
+    name = models.CharField(max_length=100)
+    width = models.IntegerField()
+    height = models.IntegerField()
 
 
 class Project(models.Model):

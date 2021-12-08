@@ -10,57 +10,42 @@ const getProject = async (projectId) => {
 };
 
 const getProjects = async () => {
-  // should return projects belonging to user: after auth'ed
   const resp = await axios.get(`${BASE_URL}/projects/`);
   return resp.data;
 };
 
 const createProject = async (project) => {
-  // replace with api call
   const resp = await axios.post(`${BASE_URL}/projects/`, project);
   return resp.data;
 };
 
 const addImageToProject = async (projectId, image) => {
-  // replace with api call
-  const project = projects.find((p) => p.id === projectId);
   const [width, height] = await getImageDimensions(image);
-  //   project.images.push({
-  //     id: project.images.length + 1,
-  //     projectId: projectId,
-  //     name: image.name,
-  //     url: window.URL.createObjectURL(image),
-  //     width,
-  //     height,
-  //     annotations: [],
-  //   });
-  console.log(image);
+
   const formData = new FormData();
   formData.append("image", image);
   formData.append("project_id", projectId);
+  formData.append("name", image.name);
+  formData.append("width", width);
+  formData.append("height", height);
 
-  const resp = await axios.post(`${BASE_URL}/images/`, formData, {
+  await axios.post(`${BASE_URL}/images/`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
-  console.log(resp, image);
 
   return await getProject(projectId);
-
-  // should return with data object
-  return project;
 };
 
 const getImage = async (imageId) => {
-  // replace with api call
-  const allImages = projects.flatMap((p) => p.images);
-  return allImages.find((image) => image.id === imageId);
+  const resp = await axios.get(`${BASE_URL}/images/${imageId}`);
+  return resp.data;
 };
 
 const getImages = async (projectId) => {
-  // replace with api call
-  return projects.flatMap((p) => p.images);
+  const resp = await axios.get(`${BASE_URL}/images/`);
+  return resp.data;
 };
 
 const addAnnotationToImage = async (imageId, annotation) => {

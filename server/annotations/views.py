@@ -6,6 +6,7 @@ from rest_framework.serializers import (
     ModelSerializer,
     PrimaryKeyRelatedField,
     IntegerField,
+    CharField,
     SerializerMethodField,
 )
 
@@ -18,24 +19,20 @@ class AnnotationSerializer(ModelSerializer):
 
 
 class ImageSerializer(Serializer):
+    id = IntegerField()
     project_id = PrimaryKeyRelatedField(queryset=Project.objects.all())
     annotations = PrimaryKeyRelatedField(queryset=Annotation.objects.all(), many=True)
     url = SerializerMethodField()
+    name = CharField()
+    width = IntegerField()
+    height = IntegerField()
 
     class Meta:
         model = Image
-        fields = ("id", "project_id", "annotations", "url")
+        fields = ("id", "project_id", "annotations", "url", "name", "width", "height")
 
     def get_url(self, obj):
         return obj.file.url
-
-    # def create(self, validated_data):
-    #     project = Project.objects.get(id=validated_data.get("project_id"))
-    #     image = Image(project_id=project.id, file=validated_data["image"])
-    #     print(image)
-    #     image.save()
-    #     print("creating?")
-    #     return image
 
 
 class ProjectSerializer(ModelSerializer):
@@ -60,5 +57,11 @@ class ImageViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         project = Project.objects.get(id=request.data.get("project_id"))
-        image = Image.objects.create(project=project, file=request.data.get("image"))
+        image = Image.objects.create(
+            project=project,
+            file=request.data.get("image"),
+            name=request.data.get("name"),
+            width=request.data.get("width"),
+            height=request.data.get("height"),
+        )
         return Response(self.serializer_class(image).data)
